@@ -1,0 +1,84 @@
+# Antonio Julian Perdomo Peralta
+#607974
+#Proyecto de pilas estructura de datos ingenieria en TI
+pila_atras = []
+pila_adelante = []
+pagina_actual = "about:blank"
+CAPACIDAD_MAXIMA = 4
+
+
+def visitar(url):
+    global pagina_actual
+
+    
+    if len(pila_atras) >= CAPACIDAD_MAXIMA:
+        print("X PILA LLENA")
+    else:
+        pila_atras.append(pagina_actual)
+
+    pagina_actual = url
+    pila_adelante.clear()
+    print("Visitando: " + pagina_actual)
+
+
+def back():
+    global pagina_actual
+    if len(pila_atras) == 0:
+        print("X PILA VACIA")
+        return
+
+    
+    if len(pila_adelante) < CAPACIDAD_MAXIMA:
+        pila_adelante.append(pagina_actual)
+
+    pagina_actual = pila_atras.pop()
+    print("regresaste a: " + pagina_actual)
+
+
+def forward():
+    global pagina_actual
+    if len(pila_adelante) == 0:
+        print("X PILA VACIA")
+        return
+
+  
+    if len(pila_atras) < CAPACIDAD_MAXIMA:
+        pila_atras.append(pagina_actual)
+
+    pagina_actual = pila_adelante.pop()
+    print("avanzaste a: " + pagina_actual)
+
+
+#Menu
+op = 0
+while op != 5:
+    print("")
+    print("1 - Visitar pagina nueva")
+    print("2 - Back")
+    print("3 - Forward")
+    print("4 - Ver pagina actual")
+    print("5 - Salir")
+
+    try:
+        op_input = input("opcion: ").strip()
+        if op_input == "":
+            print("\nsaliendo...")
+            break
+        op = int(op_input)
+    except (ValueError, KeyboardInterrupt):
+        print("opcion invalida")
+        continue
+
+    if op == 1:
+        u = input("url: ")
+        visitar(u)
+    elif op == 2:
+        back()
+    elif op == 3:
+        forward()
+    elif op == 4:
+        print("estas en: " + pagina_actual)
+    elif op == 5:
+        print("saliendo...")
+    else:
+        print("opcion invalida")
