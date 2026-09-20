@@ -1,56 +1,63 @@
 # Antonio Julian Perdomo Peralta
 #607974
 #Proyecto de pilas estructura de datos ingenieria en TI
+
+
 pila_atras = []
 pila_adelante = []
 pagina_actual = "about:blank"
 CAPACIDAD_MAXIMA = 4
+class NavegadorWeb:
+
+    def __init__(self):
+        self.pila_atras = []
+        self.pila_adelante = []
+        self.pagina_actual = "about:blank"
+        self.CAPACIDAD_MAXIMA = 4
+
+    def visitar(self, url):
+        # Validacion del tope de 4 elementos en la pila atras
+        if len(self.pila_atras) >= self.CAPACIDAD_MAXIMA:
+            print("X PILA LLENA")
+        else:
+            self.pila_atras.append(self.pagina_actual)
+
+        self.pagina_actual = url
+        self.pila_adelante.clear()
+        print("Visitando: " + self.pagina_actual)
+
+    def back(self):
+        if len(self.pila_atras) == 0:
+            print("X PILA VACIA")
+            return
+
+        # Guardamos la actual en adelante antes de retroceder
+        if len(self.pila_adelante) < self.CAPACIDAD_MAXIMA:
+            self.pila_adelante.append(self.pagina_actual)
+
+        self.pagina_actual = self.pila_atras.pop()
+        print("regresaste a: " + self.pagina_actual)
+
+    def forward(self):
+        if len(self.pila_adelante) == 0:
+            print("X PILA VACIA")
+            return
+
+        # Guardamos la actual en atras antes de avanzar
+        if len(self.pila_atras) < self.CAPACIDAD_MAXIMA:
+            self.pila_atras.append(self.pagina_actual)
+
+        self.pagina_actual = self.pila_adelante.pop()
+        print("avanzaste a: " + self.pagina_actual)
+
+    def ver_estado(self):
+        print("estas en: " + self.pagina_actual)
 
 
-def visitar(url):
-    global pagina_actual
-
-    
-    if len(pila_atras) >= CAPACIDAD_MAXIMA:
-        print("X PILA LLENA")
-    else:
-        pila_atras.append(pagina_actual)
-
-    pagina_actual = url
-    pila_adelante.clear()
-    print("Visitando: " + pagina_actual)
-
-
-def back():
-    global pagina_actual
-    if len(pila_atras) == 0:
-        print("X PILA VACIA")
-        return
-
-    
-    if len(pila_adelante) < CAPACIDAD_MAXIMA:
-        pila_adelante.append(pagina_actual)
-
-    pagina_actual = pila_atras.pop()
-    print("regresaste a: " + pagina_actual)
-
-
-def forward():
-    global pagina_actual
-    if len(pila_adelante) == 0:
-        print("X PILA VACIA")
-        return
-
-  
-    if len(pila_atras) < CAPACIDAD_MAXIMA:
-        pila_atras.append(pagina_actual)
-
-    pagina_actual = pila_adelante.pop()
-    print("avanzaste a: " + pagina_actual)
-
-
-#Menu
+# Instancia del navegador y menú principal
+navegador = NavegadorWeb()
 op = 0
+
 while op != 5:
     print("")
     print("1 - Visitar pagina nueva")
@@ -71,14 +78,16 @@ while op != 5:
 
     if op == 1:
         u = input("url: ")
-        visitar(u)
+        navegador.visitar(u)
     elif op == 2:
-        back()
+        navegador.back()
     elif op == 3:
-        forward()
+        navegador.forward()
     elif op == 4:
-        print("estas en: " + pagina_actual)
+        navegador.ver_estado()
     elif op == 5:
         print("saliendo...")
     else:
         print("opcion invalida")
+
+
