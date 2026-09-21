@@ -3,10 +3,6 @@
 #Proyecto de pilas estructura de datos ingenieria en TI
 
 
-pila_atras = []
-pila_adelante = []
-pagina_actual = "about:blank"
-CAPACIDAD_MAXIMA = 4
 class NavegadorWeb:
 
     def __init__(self):
@@ -16,12 +12,14 @@ class NavegadorWeb:
         self.CAPACIDAD_MAXIMA = 4
 
     def visitar(self, url):
-        # Validacion del tope de 4 elementos en la pila atras
         if len(self.pila_atras) >= self.CAPACIDAD_MAXIMA:
-            print("X PILA LLENA")
-        else:
-            self.pila_atras.append(self.pagina_actual)
+            print(f" PILA LLENADA [{self.CAPACIDAD_MAXIMA}]")
+            print("Paginas visitadas:")
+            for i, pagina in enumerate(self.pila_atras, start=1):
+                print(str(i) + ". " + pagina)
+            return
 
+        self.pila_atras.append(self.pagina_actual)
         self.pagina_actual = url
         self.pila_adelante.clear()
         print("Visitando: " + self.pagina_actual)
@@ -31,7 +29,6 @@ class NavegadorWeb:
             print("X PILA VACIA")
             return
 
-        # Guardamos la actual en adelante antes de retroceder
         if len(self.pila_adelante) < self.CAPACIDAD_MAXIMA:
             self.pila_adelante.append(self.pagina_actual)
 
@@ -43,7 +40,6 @@ class NavegadorWeb:
             print("X PILA VACIA")
             return
 
-        # Guardamos la actual en atras antes de avanzar
         if len(self.pila_atras) < self.CAPACIDAD_MAXIMA:
             self.pila_atras.append(self.pagina_actual)
 
@@ -54,40 +50,45 @@ class NavegadorWeb:
         print("estas en: " + self.pagina_actual)
 
 
-# Instancia del navegador y menú principal
-navegador = NavegadorWeb()
-op = 0
-
-while op != 5:
-    print("")
+def mostrar_menu():
+    print("\n===== Menu =====")
     print("1 - Visitar pagina nueva")
     print("2 - Back")
     print("3 - Forward")
     print("4 - Ver pagina actual")
     print("5 - Salir")
+    print("================")
 
-    try:
-        op_input = input("opcion: ").strip()
-        if op_input == "":
+
+def main():
+    navegador = NavegadorWeb()
+
+    opciones = {
+        "1": lambda: navegador.visitar(input("url: ")),
+        "2": navegador.back,
+        "3": navegador.forward,
+        "4": navegador.ver_estado,
+    }
+
+    while True:
+        mostrar_menu()
+
+        try:
+            op = input("opcion: ").strip()
+        except KeyboardInterrupt:
             print("\nsaliendo...")
             break
-        op = int(op_input)
-    except (ValueError, KeyboardInterrupt):
-        print("opcion invalida")
-        continue
 
-    if op == 1:
-        u = input("url: ")
-        navegador.visitar(u)
-    elif op == 2:
-        navegador.back()
-    elif op == 3:
-        navegador.forward()
-    elif op == 4:
-        navegador.ver_estado()
-    elif op == 5:
-        print("saliendo...")
-    else:
-        print("opcion invalida")
+        if op == "" or op == "5":
+            print("saliendo...")
+            break
+
+        accion = opciones.get(op)
+        if accion:
+            accion()
+        else:
+            print("opcion invalida")
 
 
+if __name__ == "__main__":
+    main()
